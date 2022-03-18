@@ -8,7 +8,7 @@ Projeto de aprendizado em nodejs desenvolvido pelo programa de treinamento IGNIT
 
 ### Requisitos
 
--  [] Deve ser possível criar uma conta;
+-  [x] Deve ser possível criar uma conta;
 -  [] Deve ser possível buscar o extrato bancário de um cliente;
 -  [] Deve ser possível realizar um depósito;
 -  [] Deve ser possível realizar um saque;
@@ -21,7 +21,7 @@ Projeto de aprendizado em nodejs desenvolvido pelo programa de treinamento IGNIT
 
 ## Regras de negócio
 
-- [] Não deve ser possível cadastrar uma conta com CPF já existente;
+- [x] Não deve ser possível cadastrar uma conta com CPF já existente;
 - [] Não deve ser possível fazer depósito em uma conta não existente;
 - [] Não deve ser possível buscar extrato em uma conta não existente;
 - [] Não deve ser possível fazer saque em uma conta não existente;
