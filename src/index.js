@@ -6,6 +6,7 @@ app.use(express.json())
 
 const customers = []
 
+//Middleware que checa se existe uma conta com determinado CPF
 function verifyIfAccountCpfExists(request, response, next) {
     const { cpf } = request.headers;
 
@@ -39,10 +40,9 @@ app.post('/account', (request, response) => {
 })
 
 
-app.use(verifyIfAccountCpfExists)
 
 //Endpoint para checar extrato
-app.get('/statement/:cpf', (request, response) => {
+app.get('/statement/:cpf', verifyIfAccountCpfExists, (request, response) => {
     const { customer } = request
 
     return response.status(200).json(customer.statement)
