@@ -15,15 +15,12 @@ function verifyIfAccountCpfExists(request, response, next) {
     if (!customer) return response.status(400).json({ error: "customer doesn't exists" })
 
     request.customer = customer
-
     return next()
 }
 
-
-//Conta -> cpf (string), name (string), id (uuid), statement []
 //Endpoint para criação de conta
 app.post('/account', (request, response) => {
-    const { cpf, name } = request.body;
+    const { cpf, name } = request.headers;
 
     const customerAlreadyExists = customers.some((customer) => customer.cpf === cpf)
 
@@ -39,13 +36,28 @@ app.post('/account', (request, response) => {
     return response.status(201).send()
 })
 
-
-
 //Endpoint para checar extrato
 app.get('/statement/:cpf', verifyIfAccountCpfExists, (request, response) => {
     const { customer } = request
 
     return response.status(200).json(customer.statement)
+})
+
+//Endpoint para registrar depósito
+app.post('/deposit', verifyIfAccountCpfExists, (request, response) => {
+    const { description, amount } = request.body
+
+    const customer = request.customer
+
+    const statementOperation = {
+        description,
+        amount,
+        created_at: new Date(),
+        type: "deposit"
+    }
+    customer.statement.push(statementOperation)
+
+    return response.status(200).send()
 })
 
 //Porta em que está sendo ouvido
