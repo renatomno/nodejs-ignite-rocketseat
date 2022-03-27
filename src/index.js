@@ -94,5 +94,19 @@ app.post('/withdraw', verifyIfAccountCpfExists, (request, response) => {
     return response.status(200).send()
 })
 
+//Endpoint para checar statements de um determinado dia
+app.get('/statement/date', verifyIfAccountCpfExists, (request, response) => {
+    const { customer } = request;
+    const { date } = request.query;
+
+    const dateFormat = new Date(date + " 00:00");
+
+    const statements = customer.statement.filter((statement) => {
+        statement.created_at.toDateString == new Date(dateFormat).toDateString()
+    })
+
+    return response.status(200).json(statements)
+})
+
 //Porta em que está sendo ouvido
 app.listen(3030, () => console.log('listening on port 3000'))
