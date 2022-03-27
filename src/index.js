@@ -18,6 +18,14 @@ function verifyIfAccountCpfExists(request, response, next) {
     return next()
 }
 
+function getBalance(statement) {
+    const balance = statement.reduce((acc, operation) => {
+        if (operation.type === 'deposit') return acc + operation.amount;
+    }, 0)
+
+    return balance;
+}
+
 //Endpoint para criação de conta
 app.post('/account', (request, response) => {
     const { cpf, name } = request.headers;
@@ -56,6 +64,32 @@ app.post('/deposit', verifyIfAccountCpfExists, (request, response) => {
         type: "deposit"
     }
     customer.statement.push(statementOperation)
+
+    return response.status(200).send()
+})
+
+//Endpoint para checar contas criadas
+app.get('/accounts', (request, response) => {
+    return response.status(200).json(customers)
+})
+
+//Endpoint para registrar depósito
+app.post('/withdraw', verifyIfAccountCpfExists, (request, response) => {
+    const { customer } = request;
+    const { description, amount } = request.body;
+
+    const balance = getBalance(customer.statement)
+
+    if (balance < amount) return response.status(400).json({ 'error': 'amount > balance' })
+
+    const statementOperation = {
+        description,
+        amount,
+        created_at: new Date(),
+        type: "debit"
+    }
+
+    customer.statement.push(statementOperation);
 
     return response.status(200).send()
 })
