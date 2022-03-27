@@ -119,5 +119,26 @@ app.put('/account', verifyIfAccountCpfExists, (request, response) => {
     return response.status(200).send()
 })
 
+//Endpoint para deletar conta
+app.delete('/account', verifyIfAccountCpfExists, (request, response) => {
+    const { customer } = request
+    const { cpf } = request.headers;
+
+    // const customerIndex = customers.indexOf(customers.cpf === cpf)
+
+    customers.splice(customer, 1)
+
+    return response.status(204).json(customers)
+
+})
+
+//Endpoint para receber o balance de um customer
+app.get('/balance', verifyIfAccountCpfExists, (request, response) => {
+    const { customer } = request;
+
+    const balance = getBalance(customer.statement)
+    return response.status(200).json({ balance })
+})
+
 //Porta em que está sendo ouvido
 app.listen(3030, () => console.log('listening on port 3000'))
