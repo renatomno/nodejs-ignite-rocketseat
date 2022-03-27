@@ -69,8 +69,9 @@ app.post('/deposit', verifyIfAccountCpfExists, (request, response) => {
 })
 
 //Endpoint para checar contas criadas
-app.get('/accounts', (request, response) => {
-    return response.status(200).json(customers)
+app.get('/account', verifyIfAccountCpfExists, (request, response) => {
+    const { customer } = request
+    return response.status(200).json(customer)
 })
 
 //Endpoint para registrar depósito
@@ -106,6 +107,16 @@ app.get('/statement/date', verifyIfAccountCpfExists, (request, response) => {
     })
 
     return response.status(200).json(statements)
+})
+
+//Endpoint para atualização do nome de uma conta
+app.put('/account', verifyIfAccountCpfExists, (request, response) => {
+    const { customer } = request;
+    const { name } = request.body
+
+    customer.name = name;
+
+    return response.status(200).send()
 })
 
 //Porta em que está sendo ouvido
